@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>DevOps</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Bootstrap -->
+    <link href="../static/css/bootstrap.css" rel="stylesheet" media="screen">
+    <link href="../static/css/main.css" rel="stylesheet" media="screen">
+
+    <!-- Script for showing errors, if any during login-->
+    <script>
+      var msg = "{{error}}";
+      console.log(msg+"login");
+      if(msg!=""){alert(msg+"shadrak");}
+    </script>
+  </head>
+
+  <body>
+    <div class="container">
+      <form class="form-signin" name="form1" method="post" action="/index" >
+        <h2 class="form-signin-heading">Login</h2>
+        <input name="myemail" id="myemail" type="email" class="form-control" placeholder="Email ID" autofocus>
+        <br/>
+        <input name="mypassword" id="mypassword" type="password" class="form-control" placeholder="Password">
+        <br/>
+        <button name="Submit" id="submit" class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
+
+		    <a href="/register_form" id="create" class="btn btn-lg btn-success">Create Account</a>
+        </form>
+    </div>
+
+  </body>
+</html>

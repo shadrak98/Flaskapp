@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <!-- <meta charset="utf-8"> -->
+    <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+    <title>Register</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Bootstrap -->
+    <link href="./static/css/bootstrap.css" rel="stylesheet" media="screen">
+    <link href="./static/css/main.css" rel="stylesheet" media="screen">
+
+    <!-- Script for showing errors, if any during login-->
+    <script>
+      var msg = "{{error}}";
+      console.log(msg+" shadrak ");
+      if(msg!=""){alert(msg);}
+    </script>
+  </head>
+
+  <body>
+    <div class="container">
+
+      <form class="form-signin" name="form1" method="post" action="/register">
+        <h2 class="form-signin-heading">Create Account</h2>
+        <input name="myusername" id="myusername" type="name" class="form-control" placeholder="Name" autofocus>
+        <input name="myemail" id="myemail" type="email" class="form-control" placeholder="Email ID" autofocus>
+        <input name="mypassword" id="mypassword" type="password" class="form-control" placeholder="Confirm Password">
+         <input name="retypepwd" id="retypepwd" type="password" class="form-control" placeholder="Re-Type Password">
+        <button name="Submit" id="submit" class="btn btn-lg btn-primary btn-block" type="submit">Create</button>
+
+        <div id="message"></div>
+      </form>
+  </div>
+  </body>
+</html>
