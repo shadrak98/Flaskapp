@@ -28,14 +28,13 @@ def index():
         ## Verify user details
         cur = mysql.connection.cursor()
         result = cur.execute("SELECT * FROM user_details where email = %s and password = %s",(username, password))
-        # result=0
-        # if password=="1": result=1
         print(str(result))
-        # app.logger.debug(result)
         if result==1:
             # return render_template("index.html")
             cur = mysql.connection.cursor()
-            res = cur.execute("SELECT * FROM tasks where email = %s", (username))
+            cur.execute("UPDATE loggedin SET value=1 WHERE email = %s",(username))
+            res = cur.execute("SELECT * FROM tasks WHERE email = %s", (username))
+            print(str(res))
             if res > 0:
                 taskDetails = cur.fetchall()
                 return render_template('index.html', taskDetails=taskDetails)
@@ -51,15 +50,18 @@ def index():
 
 @app.route('/addtask', methods=['GET', 'POST'])
 def addtask():
-    # em = var
-    # print(em)
-    email = request.args.get('var')
+    cur = mysql.connection.cursor()
+    res = cur.execute("SELECT email FROM loggedin where value=1")
+    print(str(res))
+    email = str(res)
+    cur.close()
     if request.method == 'POST':
         content = request.form
         task = content['myInput']
         print(content["myInput"])
         cur = mysql.connection.cursor()
         res = cur.execute("SELECT * FROM tasks where email = %s",(email))
+        print(str(res))
         if res > 0:
             taskDetails = cur.fetchall()
             return render_template('index.html', taskDetails=taskDetails)
@@ -76,6 +78,14 @@ def addtask():
 def register_form():
     return render_template("register_form.html", error='')
 
+@app.route('/logout')
+def logout():
+    cur = mysql.connection.cursor()
+    cur.execute("UPDATE loggedin SET value=0 WHERE value=1")
+    mysql.connection.commit()
+    cur.close()
+    return render_template("login.html")
+
 @app.route('/register', methods=['POST'])
 def register():
     if request.method == 'POST':
@@ -87,9 +97,10 @@ def register():
         if password == confirmpwd:
             cur = mysql.connection.cursor()
             cur.execute("INSERT INTO user_details(username, email, password) VALUES(%s, %s, %s)",(username, email, password))
+            cur.execute("INSERT INTO loggedin(email, value) VALUES(%s, %s)",(email, int(0)))
             mysql.connection.commit()
             cur.close()
-            return redirect(url_for('addtask', var=email))
+            return redirect(url_for('addtask'))
         return render_template("register_from.html", error='passwords not matching')
     return render_template('login.html', error="Registration Successfull!")
 
