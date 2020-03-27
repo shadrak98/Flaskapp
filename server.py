@@ -1,4 +1,4 @@
-from flask import Flask, render_template, redirect, request, url_for
+from flask import Flask, render_template, redirect, request, url_for, jsonify
 from flask_mysqldb import MySQL
 import yaml
 import sys
@@ -24,19 +24,27 @@ def index():
         userDetails = request.form
         username = userDetails['myemail']
         password = userDetails['mypassword']
-
+        print(str(username))
         ## Verify user details
         cur = mysql.connection.cursor()
-        result = cur.execute("SELECT * FROM user_details where email = %s and password = %s",(username, password))
-        print(str(result))
+        result = cur.execute("SELECT * FROM user_details where email = %s and password = %s",[str(username), str(password)])
+        print("results="+str(result))
+        data = str(jsonify(cur.fetchone()))
+        print("json"+data)
+        print("username"+str(username))
+        cur.close()
+        print("username"+username)
         if result==1:
-            # return render_template("index.html")
-            cur = mysql.connection.cursor()
-            cur.execute("UPDATE loggedin SET value=1 WHERE email = %s",(username))
-            res = cur.execute("SELECT * FROM tasks WHERE email = %s", (username))
-            print(str(res))
+            # render_template("index.html")
+            cursor = mysql.connection.cursor()
+            cursor.execute("UPDATE loggedin SET value=1 WHERE email = %s",[str(username)])
+            mysql.connection.commit()
+            # render_template("index.html")
+            res = cursor.execute("SELECT * FROM tasks WHERE email = %s",[username])
+            print("res="+str(res))
             if res > 0:
-                taskDetails = cur.fetchall()
+                taskDetails = cursor.fetchall()
+                cursor.close()
                 return render_template('index.html', taskDetails=taskDetails)
             else:
                 # why do we need to check result>0 ?, if there are no tasks, taskDetails will be empty,
@@ -52,25 +60,33 @@ def index():
 def addtask():
     cur = mysql.connection.cursor()
     res = cur.execute("SELECT email FROM loggedin where value=1")
-    print(str(res))
-    email = str(res)
+    data = cur.fetchone()
+    print("addtask res="+str(res))
+    print("data"+str(data[0]))
+    email = data[0]
+    print("email"+str(email))
     cur.close()
     if request.method == 'POST':
         content = request.form
         task = content['myInput']
-        print(content["myInput"])
+        print("content"+str(request.form.getlist('myInput')))
+        print("task="+str(task))
         cur = mysql.connection.cursor()
-        res = cur.execute("SELECT * FROM tasks where email = %s",(email))
-        print(str(res))
-        if res > 0:
-            taskDetails = cur.fetchall()
-            return render_template('index.html', taskDetails=taskDetails)
-        else:
-            cur = mysql.connection.cursor()
-            cur.execute("INSERT INTO tasks(email, tasks) VALUES(%s,%s)",(email, task))
-            mysql.connection.commit()
-            cur.close()
-            return render_template("index.html")
+        cur.execute("INSERT INTO tasks(email, tasks) VALUES(%s,%s)",[email, task])
+        mysql.connection.commit()
+        cur.close()
+        return render_template("index.html")
+        # res = cur.execute("SELECT * FROM tasks where email = %s",[email])
+        # print("res in addtask="+str(res))
+        # if res > 0:
+        #     taskDetails = cur.fetchall()
+        #     return render_template('index.html', taskDetails=taskDetails)
+        # else:
+        #     cur = mysql.connection.cursor()
+        #     cur.execute("INSERT INTO tasks(email, tasks) VALUES(%s,%s)",[email, task])
+        #     mysql.connection.commit()
+        #     cur.close()
+        #     return render_template("index.html")
     return render_template("index.html")
 
 
