@@ -67,12 +67,12 @@ def addtask():
     print("email"+str(email))
     cur.close()
     if request.method == 'POST':
-        content = request.form
-        task = content['myInput']
+        content = request.form.get("myInput")
+        # task = content['myInput']
         print("content"+str(request.form.getlist('myInput')))
-        print("task="+str(task))
+        print("task="+str(content))
         cur = mysql.connection.cursor()
-        cur.execute("INSERT INTO tasks(email, tasks) VALUES(%s,%s)",[email, task])
+        cur.execute("INSERT INTO tasks(email, tasks) VALUES(%s,%s)",[email, content])
         mysql.connection.commit()
         cur.close()
         return render_template("index.html")
