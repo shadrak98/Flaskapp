@@ -1,0 +1,27 @@
+{
+  "name": "flaskapp",
+  "version": "1.0.0",
+  "description": "A simple flask-based web app with docker implementation",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/shadrak98/Flaskapp.git"
+  },
+  "author": "Shadrak",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/shadrak98/Flaskapp/issues"
+  },
+  "dependencies": {
+    "body-parser": "*",
+    "ejs": "^2.5.2",
+    "express": "*",
+    "express-session": "^1.17.1",
+    "mysql": "^2.18.1",
+    "nodemon": "^2.0.4"
+  },
+  "homepage": "https://github.com/shadrak98/Flaskapp#readme"
+}

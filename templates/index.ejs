@@ -133,9 +133,7 @@
 <body>
 
 <div id="myDIV" class="header" >
-  <h2 style="margin:5px">My To Do List</h2>
-  <br>
-  <form action="/addtask" method="post">
+  <form action="/addtask" method="post" onsubmit="setTimeout(function(){window.location.reload();},10);">
     <input type="text" name="myInput" id="myInput" placeholder="Add something..." style="height:45px;" >
     <!-- <input type="hidden" value="foo" name="emailID"/> -->
     <button type="submit" class="addBtn" style="height:45px;">Submit Query</button>
@@ -143,20 +141,20 @@
 </div>
 
 <ul id="myUL" style="margin:20px;">
-  {% for tasks in taskDetails %}
-  <li>{{tasks[1]}}</li>
-  {% endfor %}
+  <% tasks.forEach((task) => { %>
+    <li><%- task.tasks %></li>
+  <% }); %>
   <!-- <li>Hit the gym</li>
   <li class="checked">Pay bills</li>
   <li>Meet Seoni</li>
   <li>Buy eggs</li>
   <li>Read a book</li>
-  <li>Organize office</li> -->
+  <li>Organize office</li> -->    
 </ul>
 
-<form action="/logout" method="GET">
+<!-- <form action="/logout" method="GET">
   <input type="submit" value="Logout" />
-</form>
+</form> -->
 
 <script>
   // Create a "close" button and append it to each list item
